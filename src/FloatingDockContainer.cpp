@@ -551,8 +551,12 @@ void FloatingDockContainerPrivate::updateDropOverlays(const QPoint &GlobalPos)
 	}
 
 	int VisibleDockAreas = TopContainer->visibleDockAreaCount();
-	ContainerOverlay->setAllowedAreas(
-	    VisibleDockAreas > 1 ? OuterDockAreas : AllDockAreas);
+
+	if(VisibleDockAreas > 1 || CDockManager::testConfigFlag(CDockManager::DisableTabbing))
+		ContainerOverlay->setAllowedAreas(OuterDockAreas);
+	else
+		ContainerOverlay->setAllowedAreas(AllDockAreas);
+
 	DockWidgetArea ContainerArea = ContainerOverlay->showOverlay(TopContainer);
 	ContainerOverlay->enableDropPreview(ContainerArea != InvalidDockWidgetArea);
 	auto DockArea = TopContainer->dockAreaAt(GlobalPos);

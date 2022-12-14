@@ -1,4 +1,4 @@
-//============================================================================
+﻿//============================================================================
 /// \file   FloatingDragPreview.cpp
 /// \author Uwe Kindler
 /// \date   26.11.2019
@@ -120,8 +120,12 @@ void FloatingDragPreviewPrivate::updateDropOverlays(const QPoint &GlobalPos)
 	}
 
 	int VisibleDockAreas = TopContainer->visibleDockAreaCount();
-	ContainerOverlay->setAllowedAreas(
-	    VisibleDockAreas > 1 ? OuterDockAreas : AllDockAreas);
+
+	if(VisibleDockAreas > 1 || CDockManager::testConfigFlag(CDockManager::DisableTabbing))
+		ContainerOverlay->setAllowedAreas(OuterDockAreas);
+	else
+		ContainerOverlay->setAllowedAreas(AllDockAreas);
+
 	auto DockArea = TopContainer->dockAreaAt(GlobalPos);
 	if (DockArea && DockArea->isVisible() && VisibleDockAreas >= 0 && DockArea != ContentSourceArea)
 	{
